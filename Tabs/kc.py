@@ -1,52 +1,71 @@
 import streamlit as st
+import os
+
+IMAGE_DIR = os.path.join("images", "PCOS.png")
+
 
 def app():
-    st.markdown('''<h1><center>Knowledge Centre</center></h1>''',unsafe_allow_html=True)
-    # Paragraph 1: Diabetes Detection
+    st.markdown(
+        """<h1 style="text-align: center; color: #008080;">Knowledge Centre</h1>""",
+        unsafe_allow_html=True,
+    )
+
+    # Paragraph 1: PCOS Detection using XGBoost
     col1, col2 = st.columns([1, 2])
     with col1:
-        st.image("./images/1.png", caption="Diabetes Detection", width=200)
+        img1 = os.path.join(IMAGE_DIR, "1.png")
+        # Note: Ensure you have a relevant image in your /images/ folder
+        st.image(img1, caption="PCOS Risk Assessment", width=200)
     with col2:
-        st.markdown('''
-            The diabetes care system is an advanced, data-driven platform designed to detect diabetes type and its stage using numerical data from medical test datasets. By leveraging machine learning algorithms, the system analyzes key health metrics such as blood glucose levels, HbA1c, insulin levels, and BMI to classify the type of diabetes (Type 1, Type 2, or prediabetes) and determine its progression stage. This automated detection process ensures accurate and timely diagnosis, enabling healthcare providers to intervene early. The system is user-friendly, allowing patients to upload their medical test results directly, and it generates a comprehensive analysis within seconds.
-        ''')
+        st.markdown("""
+            ### Advanced Risk Detection
+            Our PCOS assessment system is powered by **XGBoost**, a state-of-the-art gradient boosting algorithm known for its precision in medical data analysis. By evaluating key biomarkers—such as cycle regularity, BMI, and physical indicators like hirsutism and acne—the system identifies subtle patterns indicative of hormonal imbalances. Unlike traditional methods, this data-driven approach allows for an objective risk score, helping users identify potential issues before they escalate.
+        """)
 
-    # Paragraph 2: Medical Recommendations
+    # Paragraph 2: Holistic Recommendations
     col1, col2 = st.columns([2, 1])
     with col1:
-        st.markdown('''
-            In addition to detection, the system provides personalized medical recommendations based on the patient's specific condition. These recommendations include dietary plans, exercise routines, medication guidelines, and lifestyle modifications tailored to the individual's needs. The system also generates a detailed medical report, which can be downloaded in PDF format for easy sharing with healthcare professionals. This feature ensures that patients have a portable and accessible record of their health status, empowering them to take control of their diabetes management.
-        ''')
+        st.markdown("""
+            ### Personalised Wellness Paths
+            Beyond detection, the platform offers guidance tailored to the metabolic and hormonal profile of the user. This includes insulin-sensitising dietary suggestions, anti-inflammatory lifestyle habits, and targeted exercise routines. The system focuses on **root-cause management**, empowering users to take charge of their endocrine health through actionable, science-based insights.
+        """)
     with col2:
-        st.image("./images/2.png", caption="Medical Recommendations", width=200)
+        img2 = os.path.join(IMAGE_DIR, "2.png")
+        st.image(img2, caption="Lifestyle Guidance", width=200)
 
-    # Paragraph 3: Capsule Chatbot
+    # Paragraph 3: Cora Chatbot (Formerly Capsule)
     col1, col2 = st.columns([1, 2])
     with col1:
-        st.image("./images/3.png", caption="Capsule Chatbot", width=200)
+        img3 = os.path.join(IMAGE_DIR, "3.png")
+        st.image(img3, caption="Cora: Your AI Companion", width=200)
     with col2:
-        st.markdown('''
-            A standout feature of the system is Capsule, an intelligent medical chatbot designed to answer any diabetes-related queries. Capsule is equipped with a vast knowledge base, enabling it to provide information on symptoms, medication dosages, potential health implications, and side effects of treatments. The chatbot uses natural language processing (NLP) to understand user queries and deliver accurate, easy-to-understand responses. Whether a patient is unsure about their medication schedule or curious about the long-term effects of diabetes, Capsule is available 24/7 to provide reliable support and guidance.
-        ''')
+        st.markdown("""
+            ### Meet Cora
+            **Cora** is your intelligent health companion. Equipped with a deep understanding of Polycystic Ovary Syndrome, Cora uses Natural Language Processing (NLP) to answer questions about symptoms, lab results, and emotional well-being. Whether you’re curious about the 'Rotterdam Criteria' or need tips for managing hormonal breakouts, Cora is available 24/7 to provide supportive, easy-to-understand information.
+        """)
 
-    # Paragraph 4: Trend Visualization
+    # Paragraph 4: Reproductive Health Trends
     col1, col2 = st.columns([2, 1])
     with col1:
-        st.markdown('''
-            The system also includes a visualization module named Trend, which provides insights into global diabetes trends. Trend uses interactive charts, maps, and graphs to display data such as the prevalence of diabetes across different regions, demographic patterns, and historical trends. This module is particularly useful for researchers, policymakers, and healthcare providers who need to understand the broader impact of diabetes. By visualizing data in an engaging and accessible way, Trend helps stakeholders make informed decisions and develop effective strategies for diabetes prevention and management.
-        ''')
+        st.markdown("""
+            ### Global Health Insights
+            The **Trend** module provides a birds-eye view of reproductive health data worldwide. By visualizing the prevalence of PCOS across different demographics and regions, users and researchers can see the broader impact of this condition. Through interactive charts and heatmaps, Trend highlights how lifestyle factors and environmental variables correlate with hormonal health trends in 2026.
+        """)
     with col2:
-        st.image("./images/4.png", caption="Trend Visualization", width=200)
+        img4 = os.path.join(IMAGE_DIR, "4.png")
+        st.image(img4, caption="Hormonal Trends", width=200)
 
-    # Paragraph 5: Streamlit Integration
+    # Paragraph 5: Modern Architecture
     col1, col2 = st.columns([1, 2])
     with col1:
-        st.image("./images/5.png", caption="Streamlit Integration", width=200)
+        img5 = os.path.join(IMAGE_DIR, "5.png")
+        st.image(img5, caption="Streamlit Power", width=200)
     with col2:
-        st.markdown('''
-            Built using Streamlit, the diabetes care system offers a seamless and interactive user experience. Streamlit's framework allows for easy integration of machine learning models, data visualizations, and interactive components, making the system both powerful and user-friendly. The platform is accessible via web browsers, ensuring compatibility across devices. With its combination of advanced analytics, personalized recommendations, and interactive features like Capsule and Trend, this diabetes care system represents a significant step forward in diabetes management, providing patients and healthcare providers with the tools they need to combat this global health challenge.
-        ''')
+        st.markdown("""
+            ### Seamless Experience
+            Built on the **Streamlit** framework, this application merges high-performance Python backends with an intuitive interface. By integrating the speed of **XGBoost** with the conversational power of AI, we’ve created a seamless bridge between complex medical data and user-friendly health management. This platform is designed to be accessible, secure, and responsive across all devices.
+        """)
 
-# Run the app
+
 if __name__ == "__main__":
     app()

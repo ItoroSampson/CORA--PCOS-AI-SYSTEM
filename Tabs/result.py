@@ -4,55 +4,70 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Function to visualize health metrics
+
 def app():
-    st.title("📊 Patient Health Metrics Dashboard")
+    st.title("📊 Your Personalized Health Metrics")
 
-    # Set global style for neon-like effect
+    # 1. Retrieve Data from Memory (Session State)
+    # Using .get() prevents the app from crashing if the user hasn't visited Tab 1 yet
+    user_testo = st.session_state.get("user_testo", 30.0)
+    user_afc = st.session_state.get("user_afc", 10)
+    user_bmi = st.session_state.get("user_bmi", 22.0)
+
     plt.style.use("dark_background")
+    sns.set_palette("husl")
 
-    # Simulated glucose level data (With & Without Medication)
-    days = np.arange(1, 31)
-    glucose_no_med = np.random.normal(loc=180, scale=20, size=len(days))
-    glucose_with_med = glucose_no_med - np.random.normal(loc=40, scale=10, size=len(days))
-    
-    # Line chart: Glucose trend with & without medication
-    fig, ax = plt.subplots()
-    ax.set_facecolor("black")
-    ax.plot(days, glucose_no_med, marker='o', linestyle='-', label='Without Medication', color='#FF00FF')  # Neon pink
-    ax.plot(days, glucose_with_med, marker='s', linestyle='--', label='With Medication', color='#00FFFF')  # Neon cyan
-    ax.set_title("Glucose Level Trend", color='white')
-    ax.set_xlabel("Days", color='white')
-    ax.set_ylabel("Glucose Level (mg/dL)", color='white')
-    ax.legend()
-    st.pyplot(fig)
+    # --- CHART 1: Testosterone vs Clinical Threshold ---
+    st.subheader("Testosterone Analysis")
+    fig1, ax1 = plt.subplots(figsize=(8, 4))
 
-    # Simulated Insulin level comparison (Patient vs Healthy)
-    patient_insulin = np.random.normal(loc=12, scale=2, size=1)[0]
-    healthy_insulin = 15
-    
-    # Bar chart: Insulin level comparison
-    fig, ax = plt.subplots()
-    ax.set_facecolor("black")
-    ax.bar(["Patient"], [patient_insulin], color='#00FF00', label='Patient')  # Neon green
-    ax.bar(["Healthy"], [healthy_insulin], color='#FF4500', label='Healthy')  # Neon orange-red
-    ax.set_title("Insulin Levels Comparison", color='white')
-    ax.set_ylabel("Insulin Level (μU/mL)", color='white')
-    ax.legend()
-    st.pyplot(fig)
-    
-    # Simulated Diabetes Class Distribution
-    diabetes_classes = ["Class 1", "Class 2", "Class 3", "Class 4", "Class 5"]
-    diabetes_distribution = np.random.randint(10, 50, size=len(diabetes_classes))
-    
-    # Pie chart: Diabetes class distribution
-    fig, ax = plt.subplots()
-    ax.set_facecolor("black")
-    colors = ['#FF00FF', '#00FFFF', '#00FF00', '#FFFF00', '#FF4500']  # Neon colors
-    ax.pie(diabetes_distribution, labels=diabetes_classes, autopct='%1.1f%%', startangle=140, colors=colors, textprops={'color': "blue"})
-    ax.set_title("Diabetes Classification Distribution", color='white')
-    st.pyplot(fig)
+    # Clinical "Normal" range for women is generally under 45-50 ng/dL
+    threshold = 45.0
+    categories = ["Your Level", "Clinical Threshold"]
+    values = [user_testo, threshold]
 
-# Run the dashboard
+    sns.barplot(
+        x=categories,
+        y=values,
+        hue=categories,
+        palette=["#00FFFF", "#FF00FF"],
+        legend=False,
+        ax=ax1,
+    )
+    ax1.axhline(threshold, ls="--", color="white", alpha=0.7)
+    ax1.set_ylabel("ng/dL")
+    st.pyplot(fig1)
+
+    # --- CHART 2: Follicle Count Distribution ---
+    st.subheader("Follicle Density Insight")
+    # We create a distribution curve and show where the user sits
+    fig2, ax2 = plt.subplots(figsize=(8, 4))
+
+    # Simulated population data
+    pop_data = np.random.normal(loc=12, scale=5, size=1000)
+    sns.kdeplot(pop_data, fill=True, color="#00FF00", ax=ax2)
+
+    # Draw a line for the user
+    ax2.axvline(user_afc, color="red", lw=3, label="You")
+    ax2.set_title(f"Your Follicle Count: {user_afc} (PCOS threshold is often >12)")
+    ax2.legend()
+    st.pyplot(fig2)
+
+    # --- CHART 3: Metabolic Profile (BMI) ---
+    st.subheader("BMI Categorization")
+    fig3, ax3 = plt.subplots(figsize=(8, 2))
+    # A simple horizontal gauge-style bar
+    color = "#00FF00" if 18.5 <= user_bmi <= 24.9 else "#FF4500"
+    ax3.barh(["BMI"], [user_bmi], color=color)
+    ax3.set_xlim(0, 50)
+    ax3.axvline(18.5, color="white", ls=":")
+    ax3.axvline(24.9, color="white", ls=":")
+    st.pyplot(fig3)
+
+    st.write(
+        f"**Quick Insight:** Based on your inputs, your testosterone is **{user_testo} ng/dL** and your BMI is **{user_bmi}**. These metrics are key drivers for the XGBoost model."
+    )
+
+
 if __name__ == "__main__":
     app()
