@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+from schemas import PatientData
 
 load_dotenv()
 
@@ -50,25 +51,48 @@ def app(df, X, y, model, model_score):
         )
 
         if st.button("Run Diagnostic"):
-            prediction, prob_score = predict_pcos(model, features)
-            final_score = min(
-                prob_score[0] + 0.15, 1.0
-            )  # Ensure it doesn't exceed 100%
+            try:
+                valid_data = PatientData(
+                    Age=age,
+                    BMI=bmi,
+                    Menstrual_Irregularity=bool(menstrual_irregularity),
+                    Testosterone_Level=testosterone,
+                    Antral_Follicle_Count=follicle_count,
+                )
 
-            if final_score > 0.7:
-                pcos_risk_label = "HIGH PROBABILITY OF PCOS"
-                st.error(f"Assessment: {pcos_risk_label}")
-            elif final_score > 0.4:
-                pcos_risk_label = "MODERATE PROBABILITY OF PCOS"
-                st.warning(f"Assessment: {pcos_risk_label}")
-            else:
-                pcos_risk_label = "LOW PROBABILITY"
-                st.success(f"Assessment: {pcos_risk_label}")
+                features = np.array(
+                    [
+                        [
+                            valid_data.Age,
+                            int(valid_data.Menstrual_Irregularity),
+                            valid_data.Testosterone_Level,
+                            valid_data.Antral_Follicle_Count,
+                        ]
+                    ]
+                )
+                prediction, prob_score = predict_pcos(model, features)
+                final_score = min(
+                    prob_score[0] + 0.15, 1.0
+                )  # Ensure it doesn't exceed 100%
 
-            # Store in session state
-            st.session_state["prediction_result"] = pcos_risk_label
-            st.session_state["user_age"] = age
-            st.session_state["user_bmi"] = bmi
+                if final_score > 0.7:
+                    pcos_risk_label = "HIGH PROBABILITY OF PCOS"
+                    st.error(f"Assessment: {pcos_risk_label}")
+                elif final_score > 0.4:
+                    pcos_risk_label = "MODERATE PROBABILITY OF PCOS"
+                    st.warning(f"Assessment: {pcos_risk_label}")
+                else:
+                    pcos_risk_label = "LOW PROBABILITY"
+                    st.success(f"Assessment: {pcos_risk_label}")
+
+                # Store in session state
+                st.session_state["prediction_result"] = pcos_risk_label
+                st.session_state["user_age"] = age
+                st.session_state["user_bmi"] = bmi
+                st.success(f"Validation Passed for Age {valid_data.Age}!")
+
+            except Exception as e:
+                st.error(f"Input Validation Error: {e}")
 
     with tab2:
         st.title("Supportive Recommendations")
